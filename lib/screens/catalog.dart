@@ -1,9 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:trackerapp/models/cart.dart';
 import 'package:trackerapp/models/catalog.dart';
 
-class MyCatalog extends StatelessWidget {
+class MyCatalog extends StatefulWidget {
+  @override
+  MyCatalogState createState() => MyCatalogState();
+}
+
+class MyCatalogState extends State<MyCatalog> {
+  final storage = new FlutterSecureStorage();
+
+  @override
+  void initState() {
+    super.initState();
+    checkLoginStatus();
+  }
+
+  checkLoginStatus() async {
+    String jwt = await storage.read(key: 'jwt');
+    print(jwt);
+    if (jwt == null) {
+      Navigator.pushReplacementNamed(context, '/login');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,6 +63,11 @@ class _AddButton extends StatelessWidget {
 }
 
 class _MyAppBar extends StatelessWidget {
+  removeToken() async {
+    final storage = new FlutterSecureStorage();
+    await storage.delete(key: 'jwt');
+  }
+
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
@@ -48,8 +75,11 @@ class _MyAppBar extends StatelessWidget {
       floating: true,
       actions: [
         IconButton(
-          icon: Icon(Icons.shopping_cart),
-          onPressed: () => Navigator.pushNamed(context, '/cart'),
+          icon: Icon(Icons.exit_to_app),
+          onPressed: () {
+            removeToken();
+            Navigator.pushNamedAndRemoveUntil(context, '/login', (Route<dynamic> route) => false);
+          },
         ),
       ],
     );

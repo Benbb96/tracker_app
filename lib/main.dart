@@ -34,9 +34,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Trackers App',
         theme: appTheme,
-        initialRoute: '/',
+        initialRoute: '/trackers',
         routes: {
-          '/': (context) => MyLogin(),
+          '/login': (context) => MyLogin(),
           '/trackers': (context) => MyCatalog(),
           '/cart': (context) => MyCart(),
         },
