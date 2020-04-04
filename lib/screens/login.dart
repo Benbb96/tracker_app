@@ -1,9 +1,10 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:trackerapp/providers/tracker_provider.dart';
 
 class MyLogin extends StatefulWidget {
   @override
@@ -110,6 +111,7 @@ class MyLoginState extends State<MyLogin> {
     if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
       final jwt = data['access'];
+      final refresh = data['refresh'];
       setState(() {
         _wrongPassword = false;
         _isLoading = false;
@@ -117,6 +119,10 @@ class MyLoginState extends State<MyLogin> {
       // Create storage
       final storage = new FlutterSecureStorage();
       await storage.write(key: 'jwt', value: jwt);
+      await storage.write(key: 'refresh', value: refresh);
+
+      // Fetch trackers now that we have the JWT
+      Provider.of<TrackerProvider>(context, listen: false).fetchTrackers();
 
       // Change page
       Navigator.pushReplacementNamed(context, '/trackers');
