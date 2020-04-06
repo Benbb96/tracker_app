@@ -5,7 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:trackerapp/models/tracker.dart';
 
 class TrackerProvider extends ChangeNotifier {
-  final String baseApiUrl = 'http://192.168.1.85:8000/fr/tracker/api/tracker';
+  // static final String baseApiUrl = 'http://192.168.1.85:8000/fr/tracker/api';
+  static final String baseApiUrl = 'https://www.benbb96.com/fr/tracker/api';
+
+  static final String baseApiTracker = '$baseApiUrl/tracker';
+  static final String baseApiTrack = '$baseApiUrl/track';
+
   final storage = new FlutterSecureStorage();
   List<Tracker> _trackers = [];
   List<Tracker> get allTrackers => _trackers;
@@ -45,7 +50,7 @@ class TrackerProvider extends ChangeNotifier {
     }
 
     final response = await http.post(
-      baseApiUrl,
+      baseApiTracker,
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $jwt"
@@ -62,20 +67,31 @@ class TrackerProvider extends ChangeNotifier {
     }
   }
 
-//  void toggleTodo(Tracker tracker) async {
-//    final trackerIndex = _trackers.indexOf(tracker);
-//    _trackers[trackerIndex].toggleCompleted();
-//    final response = await http.patch(
-//      "http://10.0.2.2:8000/todo/${tracker.id}",
-//      headers: {"Content-Type": "application/json"},
-//      body: json.encode(tracker),
-//    );
-//    if (response.statusCode == 200) {
-//      notifyListeners();
-//    } else {
-//      _trackers[trackerIndex].toggleCompleted(); //revert back
-//    }
-//  }
+  void plusOneTrack(Tracker tracker, context) async {
+    String jwt = await storage.read(key: 'jwt');
+    print(jwt);
+    if (jwt == null) {
+      print('No JWT');
+      return;
+    }
+
+    final response = await http.post(
+      baseApiTrack,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $jwt"
+      },
+      body: jsonEncode({'tracker': tracker.id})
+    );
+    if (response.statusCode == 201) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text("Track ajouté au tracker ${tracker.name} !"),
+      ));
+    } else {
+      print("Cannot add one track");
+      print(response.body);
+    }
+  }
 
   void deleteTracker(Tracker tracker) async {
     String jwt = await storage.read(key: 'jwt');
@@ -85,7 +101,7 @@ class TrackerProvider extends ChangeNotifier {
       return;
     }
 
-    final response = await http.delete("$baseApiUrl${tracker.id}", headers: {
+    final response = await http.delete("$baseApiTracker/${tracker.id}", headers: {
       "Content-Type": "application/json",
       "Authorization": "Bearer $jwt"
     });
@@ -107,7 +123,7 @@ class TrackerProvider extends ChangeNotifier {
       return;
     }
 
-    final response = await http.get(baseApiUrl, headers: {
+    final response = await http.get(baseApiTracker, headers: {
       "Content-Type": "application/json",
       "Authorization": "Bearer $jwt"
     });

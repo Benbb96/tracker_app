@@ -10,8 +10,6 @@ class MyTrackers extends StatefulWidget {
 }
 
 class MyTrackersState extends State<MyTrackers> {
-  final storage = new FlutterSecureStorage();
-
   @override
   void initState() {
     super.initState();
@@ -19,12 +17,11 @@ class MyTrackersState extends State<MyTrackers> {
   }
 
   checkLoginStatus() async {
+    final storage = new FlutterSecureStorage();
     String jwt = await storage.read(key: 'jwt');
-    print(jwt);
     if (jwt == null) {
+      // User is not connected, redirect him to login
       Navigator.pushNamedAndRemoveUntil(context, '/login', (Route<dynamic> route) => false);
-    } else {
-
     }
   }
 
@@ -46,6 +43,7 @@ class _MyAppBar extends StatelessWidget {
   removeToken() async {
     final storage = new FlutterSecureStorage();
     await storage.delete(key: 'jwt');
+    await storage.delete(key: 'refresh');
   }
 
   @override

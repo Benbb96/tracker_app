@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:trackerapp/common/hex_color.dart';
 import 'package:trackerapp/models/tracker.dart';
+import 'package:provider/provider.dart';
+import 'package:trackerapp/providers/tracker_provider.dart';
 
 class TrackerList extends StatelessWidget {
   final List<Tracker> trackers;
@@ -11,7 +13,7 @@ class TrackerList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
-          (BuildContext context, int index) => _TrackerListItem(trackers[index]),
+          (BuildContext context, int index) => TrackerListItem(trackers[index]),
           childCount: trackers.length
       )
     );
@@ -23,26 +25,24 @@ class _PlusOneButton extends StatelessWidget {
 
   const _PlusOneButton({Key key, @required this.tracker}) : super(key: key);
 
-  plusOneTrack() {
-    String name = tracker.name;
-    print('Add one track for $name');
-    // TODO
-  }
-
   @override
   Widget build(BuildContext context) {
     return FlatButton(
-      onPressed: plusOneTrack(),
+      onPressed: () {
+        String name = tracker.name;
+        print('Add one track for $name');
+        Provider.of<TrackerProvider>(context, listen: false).plusOneTrack(tracker, context);
+      },
       splashColor: Theme.of(context).primaryColor,
       child: Icon(Icons.plus_one, semanticLabel: '+1'),
     );
   }
 }
 
-class _TrackerListItem extends StatelessWidget {
+class TrackerListItem extends StatelessWidget {
   final Tracker tracker;
 
-  _TrackerListItem(this.tracker, {Key key}) : super(key: key);
+  TrackerListItem(this.tracker, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

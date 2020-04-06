@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trackerapp/common/theme.dart';
 import 'package:trackerapp/providers/tracker_provider.dart';
-import 'package:trackerapp/screens/trackers.dart';
+import 'package:trackerapp/screens/home.dart';
 import 'package:trackerapp/screens/login.dart';
 
 void main() {
