@@ -10,10 +10,18 @@ class MyTrackers extends StatefulWidget {
 }
 
 class MyTrackersState extends State<MyTrackers> {
+  final commentController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     checkLoginStatus();
+  }
+
+  @override
+  void dispose() {
+    commentController.dispose();
+    super.dispose();
   }
 
   void checkLoginStatus() async {
@@ -33,9 +41,21 @@ class MyTrackersState extends State<MyTrackers> {
         slivers: [
           MyAppBar(),
           SliverToBoxAdapter(child: SizedBox(height: 12)),
+          SliverToBoxAdapter(
+              child: Center(
+                  child: TextField(
+                      controller: commentController,
+                      decoration: InputDecoration(
+                        labelText: 'Commentaire (facultatif)',
+                        icon: Icon(Icons.comment),
+                      )
+                  )
+              )
+          ),
+          SliverToBoxAdapter(child: SizedBox(height: 12)),
           Consumer<TrackerProvider>(
               builder: (context, trackers, child) =>
-                  TrackerList(trackers: trackers.allTrackers)),
+                  TrackerList(trackers: trackers.allTrackers, commentController: commentController)),
         ],
       ), onRefresh: () {
         return Provider.of<TrackerProvider>(context, listen: false).fetchTrackers(context);

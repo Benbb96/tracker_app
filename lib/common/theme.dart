@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 final appTheme = ThemeData(
-  primarySwatch: Colors.yellow,
+  primarySwatch: Colors.brown,
   textTheme: TextTheme(
     display4: TextStyle(
       fontFamily: 'Corben',

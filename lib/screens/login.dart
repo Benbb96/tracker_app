@@ -91,7 +91,6 @@ class MyLoginState extends State<MyLogin> {
                         setState(() {
                           _isLoading = true;
                         });
-
                         signIn(
                             usernameController.text, passwordController.text);
                       }

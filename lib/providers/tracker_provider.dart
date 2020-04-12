@@ -101,7 +101,7 @@ class TrackerProvider extends ChangeNotifier {
     }
   }
 
-  void plusOneTrack(Tracker tracker, context) async {
+  void plusOneTrack(Tracker tracker, String comment, context) async {
     String jwt = await storage.read(key: 'jwt');
     print(jwt);
     if (jwt == null) {
@@ -109,7 +109,7 @@ class TrackerProvider extends ChangeNotifier {
       return;
     }
 
-    Track track = Track(tracker: tracker.id);
+    Track track = Track(tracker: tracker.id, commentaire: comment);
 
     final response = await http.post(
       baseApiTrack,

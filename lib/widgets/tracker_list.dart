@@ -6,14 +6,15 @@ import 'package:trackerapp/providers/tracker_provider.dart';
 
 class TrackerList extends StatelessWidget {
   final List<Tracker> trackers;
+  final TextEditingController commentController;
 
-  TrackerList({@required this.trackers});
+  TrackerList({@required this.trackers, @required this.commentController});
 
   @override
   Widget build(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
-          (BuildContext context, int index) => TrackerListItem(trackers[index]),
+          (BuildContext context, int index) => TrackerListItem(trackers[index], commentController),
           childCount: trackers.length
       )
     );
@@ -22,8 +23,9 @@ class TrackerList extends StatelessWidget {
 
 class TrackerListItem extends StatelessWidget {
   final Tracker tracker;
+  final TextEditingController commentController;
 
-  TrackerListItem(this.tracker, {Key key}) : super(key: key);
+  TrackerListItem(this.tracker, @required this.commentController, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +51,7 @@ class TrackerListItem extends StatelessWidget {
               child: Text(tracker.name, style: textTheme),
             ),
             SizedBox(width: 24),
-            _PlusOneButton(tracker: tracker),
+            _PlusOneButton(tracker: tracker, commentController: commentController),
           ],
         ),
       ),
@@ -59,8 +61,9 @@ class TrackerListItem extends StatelessWidget {
 
 class _PlusOneButton extends StatelessWidget {
   final Tracker tracker;
+  final TextEditingController commentController;
 
-  const _PlusOneButton({Key key, @required this.tracker}) : super(key: key);
+  const _PlusOneButton({Key key, @required this.tracker, @required this.commentController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +71,8 @@ class _PlusOneButton extends StatelessWidget {
       onPressed: () {
         String name = tracker.name;
         print('Add one track for $name');
-        Provider.of<TrackerProvider>(context, listen: false).plusOneTrack(tracker, context);
+        Provider.of<TrackerProvider>(context, listen: false).plusOneTrack(tracker, commentController.text, context);
+        commentController.clear();
       },
       splashColor: Theme.of(context).primaryColor,
       child: Icon(Icons.plus_one, semanticLabel: '+1'),
