@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:trackerapp/models/track.dart';
+import 'package:intl/intl.dart';
 
 class Tracker {
   int id;
@@ -6,8 +8,9 @@ class Tracker {
   String name;
   String icon;
   String color;
-  String creationDate;
+  DateTime creationDate;
   int order;
+  List<Track> tracks;
 
   Tracker({
     this.id,
@@ -16,7 +19,8 @@ class Tracker {
     @required this.icon,
     @required this.color,
     @required this.creationDate,
-    @required this.order
+    @required this.order,
+    this.tracks
   });
 
   factory Tracker.fromJson(Map<String, dynamic> json) {
@@ -26,8 +30,9 @@ class Tracker {
       name: json['nom'],
       icon: json['icone'],
       color: json['color'],
-      creationDate: json['date_creation'],
+      creationDate: DateTime.parse(json['date_creation']).toLocal(),
       order: json['order'],
+      tracks: json['tracks'].map<Track>((json) => Track.fromJson(json)).toList()
     );
   }
   dynamic toJson() => {
@@ -35,7 +40,8 @@ class Tracker {
     'nom': name,
     'icone': icon,
     'color': color,
-    'date_creation': creationDate,
-    'order': order
+    'date_creation': DateFormat("yyyy-MM-ddTH:m:s").format(creationDate.toUtc()),
+    'order': order,
+    'tracks': tracks.map((track) => track.toJson())
   };
 }

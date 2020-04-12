@@ -20,25 +20,6 @@ class TrackerList extends StatelessWidget {
   }
 }
 
-class _PlusOneButton extends StatelessWidget {
-  final Tracker tracker;
-
-  const _PlusOneButton({Key key, @required this.tracker}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return FlatButton(
-      onPressed: () {
-        String name = tracker.name;
-        print('Add one track for $name');
-        Provider.of<TrackerProvider>(context, listen: false).plusOneTrack(tracker, context);
-      },
-      splashColor: Theme.of(context).primaryColor,
-      child: Icon(Icons.plus_one, semanticLabel: '+1'),
-    );
-  }
-}
-
 class TrackerListItem extends StatelessWidget {
   final Tracker tracker;
 
@@ -58,6 +39,9 @@ class TrackerListItem extends StatelessWidget {
               aspectRatio: 1,
               child: Container(
                 color: HexColor(tracker.color),
+                child: Center(
+                  child: Text(tracker.tracks.length.toString()),
+                ),
               ),
             ),
             SizedBox(width: 24),
@@ -69,6 +53,25 @@ class TrackerListItem extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _PlusOneButton extends StatelessWidget {
+  final Tracker tracker;
+
+  const _PlusOneButton({Key key, @required this.tracker}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FlatButton(
+      onPressed: () {
+        String name = tracker.name;
+        print('Add one track for $name');
+        Provider.of<TrackerProvider>(context, listen: false).plusOneTrack(tracker, context);
+      },
+      splashColor: Theme.of(context).primaryColor,
+      child: Icon(Icons.plus_one, semanticLabel: '+1'),
     );
   }
 }

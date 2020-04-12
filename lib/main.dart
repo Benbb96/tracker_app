@@ -5,6 +5,9 @@ import 'package:trackerapp/providers/tracker_provider.dart';
 import 'package:trackerapp/screens/home.dart';
 import 'package:trackerapp/screens/login.dart';
 
+const String loginRoute = '/login';
+const String trackersRoute = '/trackers';
+
 void main() {
   runApp(MyApp());
 }
@@ -14,14 +17,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // Using MultiProvider is convenient when providing multiple objects.
     return ChangeNotifierProvider(
-      create: (context) => TrackerProvider(),
+      create: (context) => TrackerProvider(context),
       child: MaterialApp(
         title: 'Trackers App',
         theme: appTheme,
-        initialRoute: '/trackers',
+        initialRoute: trackersRoute,
         routes: {
-          '/login': (context) => MyLogin(),
-          '/trackers': (context) => MyTrackers(),
+          loginRoute: (context) => MyLogin(),
+          trackersRoute: (context) => MyTrackers(),
         },
       ),
     );

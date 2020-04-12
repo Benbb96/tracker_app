@@ -16,36 +16,35 @@ class MyTrackersState extends State<MyTrackers> {
     checkLoginStatus();
   }
 
-  checkLoginStatus() async {
+  void checkLoginStatus() async {
     final storage = new FlutterSecureStorage();
     String jwt = await storage.read(key: 'jwt');
     if (jwt == null) {
       // User is not connected, redirect him to login
-      Navigator.pushNamedAndRemoveUntil(context, '/login', (Route<dynamic> route) => false);
+      Navigator.pushNamedAndRemoveUntil(
+          context, '/login', (Route<dynamic> route) => false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
+      body: RefreshIndicator(child: CustomScrollView(
         slivers: [
-          _MyAppBar(),
+          MyAppBar(),
           SliverToBoxAdapter(child: SizedBox(height: 12)),
-          Consumer<TrackerProvider>(builder: (context, trackers, child) => TrackerList(trackers: trackers.allTrackers)),
+          Consumer<TrackerProvider>(
+              builder: (context, trackers, child) =>
+                  TrackerList(trackers: trackers.allTrackers)),
         ],
-      ),
+      ), onRefresh: () {
+        return Provider.of<TrackerProvider>(context, listen: false).fetchTrackers(context);
+        },)
     );
   }
 }
 
-class _MyAppBar extends StatelessWidget {
-  removeToken() async {
-    final storage = new FlutterSecureStorage();
-    await storage.delete(key: 'jwt');
-    await storage.delete(key: 'refresh');
-  }
-
+class MyAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
@@ -54,9 +53,12 @@ class _MyAppBar extends StatelessWidget {
       actions: [
         IconButton(
           icon: Icon(Icons.exit_to_app),
-          onPressed: () {
-            removeToken();
-            Navigator.pushNamedAndRemoveUntil(context, '/login', (Route<dynamic> route) => false);
+          onPressed: () async {
+            final storage = new FlutterSecureStorage();
+            await storage.delete(key: 'jwt');
+            await storage.delete(key: 'refresh');
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/login', (Route<dynamic> route) => false);
           },
         ),
       ],

@@ -122,7 +122,7 @@ class MyLoginState extends State<MyLogin> {
       await storage.write(key: 'refresh', value: refresh);
 
       // Fetch trackers now that we have the JWT
-      Provider.of<TrackerProvider>(context, listen: false).fetchTrackers();
+      Provider.of<TrackerProvider>(context, listen: false).fetchTrackers(context);
 
       // Change page
       Navigator.pushReplacementNamed(context, '/trackers');
