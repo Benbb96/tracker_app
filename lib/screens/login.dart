@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:trackerapp/providers/tracker_provider.dart';
 
 class MyLogin extends StatefulWidget {
+  static const routeName = '/login';
+
   @override
   MyLoginState createState() {
     return MyLoginState();

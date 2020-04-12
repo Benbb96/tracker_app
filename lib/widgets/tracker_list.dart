@@ -3,6 +3,7 @@ import 'package:trackerapp/common/hex_color.dart';
 import 'package:trackerapp/models/tracker.dart';
 import 'package:provider/provider.dart';
 import 'package:trackerapp/providers/tracker_provider.dart';
+import 'package:trackerapp/screens/tracker.dart';
 
 class TrackerList extends StatelessWidget {
   final List<Tracker> trackers;
@@ -13,11 +14,10 @@ class TrackerList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverList(
-      delegate: SliverChildBuilderDelegate(
-          (BuildContext context, int index) => TrackerListItem(trackers[index], commentController),
-          childCount: trackers.length
-      )
-    );
+        delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) =>
+                TrackerListItem(trackers[index], commentController),
+            childCount: trackers.length));
   }
 }
 
@@ -25,7 +25,8 @@ class TrackerListItem extends StatelessWidget {
   final Tracker tracker;
   final TextEditingController commentController;
 
-  TrackerListItem(this.tracker, @required this.commentController, {Key key}) : super(key: key);
+  TrackerListItem(this.tracker, this.commentController, {Key key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,10 +49,19 @@ class TrackerListItem extends StatelessWidget {
             ),
             SizedBox(width: 24),
             Expanded(
-              child: Text(tracker.name, style: textTheme),
+              child: InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      TrackerDetail.routeName,
+                      arguments: tracker,
+                    );
+                  },
+                  child: Text(tracker.name, style: textTheme)),
             ),
             SizedBox(width: 24),
-            _PlusOneButton(tracker: tracker, commentController: commentController),
+            _PlusOneButton(
+                tracker: tracker, commentController: commentController),
           ],
         ),
       ),
@@ -63,7 +73,9 @@ class _PlusOneButton extends StatelessWidget {
   final Tracker tracker;
   final TextEditingController commentController;
 
-  const _PlusOneButton({Key key, @required this.tracker, @required this.commentController}) : super(key: key);
+  const _PlusOneButton(
+      {Key key, @required this.tracker, @required this.commentController})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +83,8 @@ class _PlusOneButton extends StatelessWidget {
       onPressed: () {
         String name = tracker.name;
         print('Add one track for $name');
-        Provider.of<TrackerProvider>(context, listen: false).plusOneTrack(tracker, commentController.text, context);
+        Provider.of<TrackerProvider>(context, listen: false)
+            .plusOneTrack(tracker, commentController.text, context);
         commentController.clear();
       },
       splashColor: Theme.of(context).primaryColor,

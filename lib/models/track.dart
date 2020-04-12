@@ -37,7 +37,11 @@ class Track {
     return datetime != null ? DateTime.parse(datetime).toLocal() : null;
   }
 
+  String get getFormatedDateTime {
+    return datetime != null ? DateFormat("dd/MM/yyyy à HH:mm:ss").format(DateTime.parse(datetime).toLocal()) : '';
+  }
+
   set setDateTime(DateTime newDateTime) {
-    datetime = DateFormat("yyyy-MM-ddTH:m:s").format(newDateTime.toUtc());
+    datetime = DateFormat("yyyy-MM-ddTHH:mm:ss").format(newDateTime.toUtc());
   }
 }

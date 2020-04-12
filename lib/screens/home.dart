@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:trackerapp/providers/tracker_provider.dart';
+import 'package:trackerapp/widgets/my_app_bar.dart';
 import 'package:trackerapp/widgets/tracker_list.dart';
 
 class MyTrackers extends StatefulWidget {
+  static const routeName = '/trackers';
+
   @override
   MyTrackersState createState() => MyTrackersState();
 }
@@ -60,28 +63,6 @@ class MyTrackersState extends State<MyTrackers> {
       ), onRefresh: () {
         return Provider.of<TrackerProvider>(context, listen: false).fetchTrackers(context);
         },)
-    );
-  }
-}
-
-class MyAppBar extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SliverAppBar(
-      title: Text('Trackers', style: Theme.of(context).textTheme.display4),
-      floating: true,
-      actions: [
-        IconButton(
-          icon: Icon(Icons.exit_to_app),
-          onPressed: () async {
-            final storage = new FlutterSecureStorage();
-            await storage.delete(key: 'jwt');
-            await storage.delete(key: 'refresh');
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/login', (Route<dynamic> route) => false);
-          },
-        ),
-      ],
     );
   }
 }

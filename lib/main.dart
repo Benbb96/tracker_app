@@ -4,9 +4,7 @@ import 'package:trackerapp/common/theme.dart';
 import 'package:trackerapp/providers/tracker_provider.dart';
 import 'package:trackerapp/screens/home.dart';
 import 'package:trackerapp/screens/login.dart';
-
-const String loginRoute = '/login';
-const String trackersRoute = '/trackers';
+import 'package:trackerapp/screens/tracker.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,10 +19,11 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Trackers App',
         theme: appTheme,
-        initialRoute: trackersRoute,
+        initialRoute: MyTrackers.routeName,
         routes: {
-          loginRoute: (context) => MyLogin(),
-          trackersRoute: (context) => MyTrackers(),
+          MyLogin.routeName: (context) => MyLogin(),
+          MyTrackers.routeName: (context) => MyTrackers(),
+          TrackerDetail.routeName: (context) => TrackerDetail(),
         },
       ),
     );

@@ -17,7 +17,7 @@ class TrackerProvider extends ChangeNotifier {
   List<Tracker> get allTrackers => _trackers;
 
   TrackerProvider(context) {
-    this.fetchTrackers(context);
+    fetchTrackers(context);
   }
 
   fetchTrackers(context) async {
@@ -41,7 +41,7 @@ class TrackerProvider extends ChangeNotifier {
       print("Cannot fecth trackers");
       print(response.body);
       if (response.statusCode == 401) {
-        this.refreshToken(context);
+        refreshToken(context);
       }
     }
   }
@@ -61,7 +61,7 @@ class TrackerProvider extends ChangeNotifier {
       Map<String, dynamic> data = jsonDecode(response.body);
       await storage.write(key: 'jwt', value:  data['access']);
       await storage.write(key: 'refresh', value: data['refresh']);
-      this.fetchTrackers(context);
+      fetchTrackers(context);
     } else {
       print('Erreur de refresh');
       print(response.body);
@@ -123,13 +123,13 @@ class TrackerProvider extends ChangeNotifier {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text("Track ajouté au tracker ${tracker.name} !"),
       ));
-      tracker.tracks.add(track);
-      notifyListeners();
+      // Refresh Trackers to have the new track (not really optimized)
+      fetchTrackers(context);
     } else {
       print("Cannot add one track");
       print(response.body);
       if (response.statusCode == 401) {
-        this.refreshToken(context);
+        refreshToken(context);
       }
     }
   }
