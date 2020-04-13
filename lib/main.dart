@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Trackers App',
         theme: appTheme,
+        debugShowCheckedModeBanner: false,
         initialRoute: MyTrackers.routeName,
         routes: {
           MyLogin.routeName: (context) => MyLogin(),

@@ -6,8 +6,8 @@ import 'package:trackerapp/models/track.dart';
 import 'package:trackerapp/models/tracker.dart';
 
 class TrackerProvider extends ChangeNotifier {
-  static final String baseApiUrl = 'http://192.168.1.85:8000/fr/tracker/api';
-//  static final String baseApiUrl = 'https://www.benbb96.com/fr/tracker/api';
+//  static final String baseApiUrl = 'http://192.168.1.85:8000/fr/tracker/api';
+  static final String baseApiUrl = 'https://www.benbb96.com/fr/tracker/api';
 
   static final String baseApiTracker = '$baseApiUrl/tracker';
   static final String baseApiTrack = '$baseApiUrl/track';
