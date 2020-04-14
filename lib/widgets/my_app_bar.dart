@@ -17,8 +17,7 @@ class MyAppBar extends StatelessWidget {
           icon: Icon(Icons.exit_to_app),
           onPressed: () async {
             final storage = new FlutterSecureStorage();
-            await storage.delete(key: 'jwt');
-            await storage.delete(key: 'refresh');
+            await storage.deleteAll();
             Navigator.pushNamedAndRemoveUntil(
                 context, '/login', (Route<dynamic> route) => false);
           },

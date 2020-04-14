@@ -68,8 +68,7 @@ class TrackerProvider extends ChangeNotifier {
       Scaffold.of(context).showSnackBar(SnackBar(
           content: Text("Veuillez vous reconnecter..."),
       ));
-      await storage.delete(key: 'jwt');
-      await storage.delete(key: 'refresh');
+      await storage.deleteAll();
       Navigator.pushNamedAndRemoveUntil(
           context, '/login', (Route<dynamic> route) => false);
     }
