@@ -94,7 +94,7 @@ class MyLoginState extends State<MyLogin> {
                           _isLoading = true;
                         });
                         signIn(
-                            usernameController.text, passwordController.text);
+                            usernameController.text, passwordController.text, context);
                       }
                     },
                   )
@@ -105,7 +105,7 @@ class MyLoginState extends State<MyLogin> {
     );
   }
 
-  signIn(String login, String password) async {
+  signIn(String login, String password, BuildContext context) async {
     final response = await http.post('https://www.benbb96.com/api/token/',
         body: {'username': login, 'password': password});
 
@@ -128,6 +128,7 @@ class MyLoginState extends State<MyLogin> {
       // Change page
       Navigator.pushReplacementNamed(context, '/trackers');
     } else {
+      print(response.body);
       setState(() {
         _wrongPassword = true;
         _isLoading = false;
