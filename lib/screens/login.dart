@@ -17,8 +17,8 @@ class MyLogin extends StatefulWidget {
 
 class MyLoginState extends State<MyLogin> {
   bool _isLoading = false;
-  bool _wrongPassword = false;
-  final _formKey = GlobalKey<FormState>();
+  String usernameErrorMsg;
+  String passwordErrorMsg;
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -36,8 +36,7 @@ class MyLoginState extends State<MyLogin> {
       body: Center(
         child: Container(
             padding: EdgeInsets.all(80.0),
-            child: Form(
-              key: _formKey,
+            child: AutofillGroup(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -45,33 +44,22 @@ class MyLoginState extends State<MyLogin> {
                     "S'identifier",
                     style: Theme.of(context).textTheme.display4,
                   ),
-                  TextFormField(
+                  TextField(
                     controller: usernameController,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Saisir votre login';
-                      }
-                      return null;
-                    },
+                    autofillHints: [AutofillHints.username],
                     decoration: InputDecoration(
-                        hintText: 'Login', icon: Icon(Icons.perm_identity)),
+                        hintText: 'Login',
+                        icon: Icon(Icons.perm_identity),
+                        errorText: usernameErrorMsg),
                   ),
-                  TextFormField(
+                  TextField(
                     controller: passwordController,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Saisir votre mot de passe';
-                      }
-                      if (value.length < 6) {
-                        return 'Mot de passe trop court';
-                      }
-                      return null;
-                    },
+                    textInputAction: TextInputAction.done,
+                    autofillHints: [AutofillHints.password],
                     decoration: InputDecoration(
                         hintText: 'Mot de passe',
                         icon: Icon(Icons.lock),
-                        errorText:
-                            _wrongPassword ? "Erreur de mot de passe" : null),
+                        errorText: passwordErrorMsg),
                     obscureText: true,
                   ),
                   SizedBox(
@@ -89,12 +77,8 @@ class MyLoginState extends State<MyLogin> {
                                     backgroundColor: Colors.black))
                             : Text('Entrer')),
                     onPressed: () {
-                      if (_formKey.currentState.validate()) {
-                        setState(() {
-                          _isLoading = true;
-                        });
-                        signIn(
-                            usernameController.text, passwordController.text, context);
+                      if (validateFields()) {
+                        signIn(context);
                       }
                     },
                   )
@@ -105,16 +89,46 @@ class MyLoginState extends State<MyLogin> {
     );
   }
 
-  signIn(String login, String password, BuildContext context) async {
+  bool validateFields() {
+    bool valid = false;
+    setState(() {
+      // Username validation
+      if (usernameController.text.isEmpty) {
+        usernameErrorMsg = 'Saisir votre login';
+      } else {
+        usernameErrorMsg = null;
+      }
+
+      // Password validation
+      if (passwordController.text.isEmpty) {
+        passwordErrorMsg = 'Saisir votre mot de passe';
+      } else if (passwordController.text.length < 6) {
+        passwordErrorMsg = 'Mot de passe trop court';
+      } else {
+        passwordErrorMsg = null;
+      }
+
+      if (usernameErrorMsg == null && passwordErrorMsg == null) {
+        _isLoading = true;
+        valid = true;
+      }
+    });
+    return valid;
+  }
+
+  signIn(BuildContext context) async {
     final response = await http.post('https://www.benbb96.com/api/token/',
-        body: {'username': login, 'password': password});
+        body: {
+          'username': usernameController.text,
+          'password': passwordController.text
+        });
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
       final jwt = data['access'];
       final refresh = data['refresh'];
       setState(() {
-        _wrongPassword = false;
+        passwordErrorMsg = null;
         _isLoading = false;
       });
       // Create storage
@@ -123,14 +137,15 @@ class MyLoginState extends State<MyLogin> {
       await storage.write(key: 'refresh', value: refresh);
 
       // Fetch trackers now that we have the JWT
-      Provider.of<TrackerProvider>(context, listen: false).fetchTrackers(context);
+      Provider.of<TrackerProvider>(context, listen: false)
+          .fetchTrackers(context);
 
       // Change page
       Navigator.pushReplacementNamed(context, '/trackers');
     } else {
       print(response.body);
       setState(() {
-        _wrongPassword = true;
+        passwordErrorMsg = "Erreur de mot de passe";
         _isLoading = false;
       });
     }
