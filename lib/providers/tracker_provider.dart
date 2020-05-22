@@ -54,7 +54,7 @@ class TrackerProvider extends ChangeNotifier {
       return;
     }
 
-    final response = await http.post('http://192.168.1.85:8000/api/token/refresh/',
+    final response = await http.post('https://www.benbb96.com/api/token/refresh/',
         body: {'refresh': refresh});
 
     if (response.statusCode == 200) {
