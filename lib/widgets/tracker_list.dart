@@ -43,7 +43,10 @@ class TrackerListItem extends StatelessWidget {
               child: Container(
                 color: HexColor(tracker.color),
                 child: Center(
-                  child: Text(tracker.tracks.length.toString()),
+                  child: Text(
+                      tracker.tracks.length.toString(),
+                      style: TextStyle(color: HexColor(tracker.contrastColor))
+                  ),
                 ),
               ),
             ),

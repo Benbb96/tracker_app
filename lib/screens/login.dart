@@ -43,7 +43,7 @@ class MyLoginState extends State<MyLogin> {
                 children: [
                   Text(
                     "S'identifier",
-                    style: Theme.of(context).textTheme.display4,
+                    style: Theme.of(context).textTheme.headline1,
                   ),
                   TextFormField(
                     controller: usernameController,

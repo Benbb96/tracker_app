@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 final appTheme = ThemeData(
   primarySwatch: Colors.brown,
   textTheme: TextTheme(
-    display4: TextStyle(
+    headline1: TextStyle(
       fontFamily: 'Corben',
       fontWeight: FontWeight.w700,
       fontSize: 24,

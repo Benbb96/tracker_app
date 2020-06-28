@@ -8,6 +8,7 @@ class Tracker {
   String name;
   String icon;
   String color;
+  String contrastColor;
   DateTime creationDate;
   int order;
   List<Track> tracks;
@@ -18,6 +19,7 @@ class Tracker {
     @required this.name,
     @required this.icon,
     @required this.color,
+    @required this.contrastColor,
     @required this.creationDate,
     @required this.order,
     this.tracks
@@ -30,6 +32,7 @@ class Tracker {
       name: json['nom'],
       icon: json['icone'],
       color: json['color'],
+      contrastColor: json['contrast_color'],
       creationDate: DateTime.parse(json['date_creation']).toLocal(),
       order: json['order'],
       tracks: json['tracks'].map<Track>((json) => Track.fromJson(json)).toList()
