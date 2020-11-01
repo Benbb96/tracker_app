@@ -13,7 +13,7 @@ class TrackerDetail extends StatelessWidget {
     return Scaffold(
       body: RefreshIndicator(child: CustomScrollView(
         slivers: [
-          MyAppBar(title: tracker.name),
+          MyAppBar(title: tracker.name, color: tracker.color, contrastColor: tracker.contrastColor),
           SliverToBoxAdapter(child: SizedBox(height: 12)),
           TracksList(tracks: tracker.tracks),
         ],
